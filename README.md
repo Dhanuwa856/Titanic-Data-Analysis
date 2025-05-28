@@ -48,7 +48,7 @@ Make sure you have the following libraries installed:
 ```bash
 pip install pandas numpy matplotlib
 ```
-
+---
 ## ▶️ How to Run
 
 1. Place the Titanic dataset in the ../Data/ directory with the name titanic.csv.
