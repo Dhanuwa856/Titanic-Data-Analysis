@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# 1. Data acquisition and testing
+# 1. Data acquisition and initial exploration
 # File path
 FILE_PATH = "../Data/titanic.csv"
 
@@ -13,7 +13,7 @@ df = pd.read_csv(FILE_PATH)
 print("Show first 5 rows:")
 print(df.head())
 
-# Data types and empty values
+# Data types and missing values
 print("\nData info:")
 print(df.info())
 
@@ -23,69 +23,69 @@ print(df.describe())
 
 # 2. Data Cleaning
 
-# Empty values
-print('\nEmpty Values:')
+# Handling missing values
+print('\nMissing Values:')
 print(df.isnull().sum())
 
-# Fill in the blanks with the mean Age Column
-df['Age'].fillna(df['Age'].mean())
+# Fill missing values in the 'Age' column with the mean
+df['Age'].fillna(df['Age'].mean(), inplace=True)  # Added inplace=True to reflect changes in the DataFrame
 
-# Removing unnecessary columns
-df.drop(['Name'],axis=1,inplace=True)
+# Dropping unnecessary columns
+df.drop(['Name'], axis=1, inplace=True)
 
-# Converting categorical data to numerical
+# Converting categorical data (e.g., 'Sex') to numerical
 df['Sex'] = df['Sex'].map({'male': 0, 'female': 1})
 
 print('\nCleaned data:')
 print(df.head())
 
+# Visualizations
 
-# Lifesaving rates by class
+# Survival rates by class
 survival_by_class = df.groupby('Pclass')['Survived'].mean()
-plt.figure(figsize=(10,6))
+plt.figure(figsize=(10, 6))
 plt.bar(survival_by_class.index, survival_by_class.values, color=['#1f77b4', '#ff7f0e', '#2ca02c'])
-plt.title("Lifesaving rates by class")
+plt.title("Survival Rates by Class")
 plt.xlabel('Class')
-plt.ylabel("Lifesaving rates")
+plt.ylabel("Survival Rate")
 plt.xticks([1, 2, 3], labels=['1st', '2nd', '3rd'])
 plt.grid(axis='y', linestyle='--')
-plt.savefig('../Results/Lifesaving_rates_by_class.png')  # Save the figure
+plt.savefig('../Results/Survival_Rates_by_Class.png')  # Save the figure
 plt.close()
 
 # Age distribution
-plt.figure(figsize=(10,6))
+plt.figure(figsize=(10, 6))
 plt.hist(df['Age'], bins=20, color='purple', edgecolor='black')
-plt.title('Passengers Age distribution')
+plt.title('Passengers Age Distribution')
 plt.xlabel('Age')
-plt.ylabel('Passengers')
+plt.ylabel('Number of Passengers')
 plt.grid(linestyle='--')
-plt.savefig('../Results/Passengers_age_distribution.png')
+plt.savefig('../Results/Passengers_Age_Distribution.png')
 plt.close()
 
-# Fees and lifesaving
-plt.figure(figsize=(10,6))
+# Fare vs. Age by Survival
+plt.figure(figsize=(10, 6))
 plt.scatter(df['Fare'], df['Age'], c=df['Survived'], cmap='coolwarm', alpha=0.6)
 plt.colorbar(label='Survived (1) / Died (0)')
-plt.title('Rescue by Fare and Age')
+plt.title('Survival by Fare and Age')
 plt.xlabel('Fare')
 plt.ylabel('Age')
 plt.grid(True)
-plt.savefig('../Results/Rescue_by_Fare_and_Age.png')
+plt.savefig('../Results/Survival_by_Fare_and_Age.png')
 plt.close()
 
-
+# Survival rates by sex
 survival_by_sex = df.groupby('Sex')['Survived'].mean()
-plt.figure(figsize=(10,4))
-plt.bar(survival_by_sex.index, survival_by_sex.values, color=['blue','pink'])
-plt.title("Lifesaving rates by sex")
-plt.xlabel("sex")
-plt.ylabel("Lifesaving rates")
-plt.xticks([0,1], labels=['Male', 'Female'])
+plt.figure(figsize=(10, 4))
+plt.bar(survival_by_sex.index, survival_by_sex.values, color=['blue', 'pink'])
+plt.title("Survival Rates by Sex")
+plt.xlabel("Sex")
+plt.ylabel("Survival Rate")
+plt.xticks([0, 1], labels=['Male', 'Female'])
 plt.grid(axis='y', linestyle='--')
-plt.savefig('../Results/Lifesaving_rates_by_sex.png')
+plt.savefig('../Results/Survival_Rates_by_Sex.png')
 plt.close()
 
 # Saving the cleaned data as CSV
-df.to_csv('../data/cleaned_titanic_data.csv', index=False)
+df.to_csv('../Data/cleaned_titanic_data.csv', index=False)
 print("Cleaned data saved!")
-
